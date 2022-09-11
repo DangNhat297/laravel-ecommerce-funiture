@@ -19,6 +19,8 @@ php artisan storage:link
 
 Account admin: admin@gmail.com - password
 
+Config smtp mail in file .env
+
 If you want dummy data, then run this-
 
 ```
