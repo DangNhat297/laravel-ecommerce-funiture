@@ -953,7 +953,7 @@ textarea {
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
   display: inline-flex;
-  margin-right: 36px;
+  margin-right: 25px;
   position: relative;
 }
 
@@ -1196,7 +1196,7 @@ textarea {
 }
 
 .header-height-1 {
-  min-height: 171px;
+  /* min-height: 171px; */
 }
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
@@ -4017,7 +4017,8 @@ textarea {
   display: inline-block;
 }
 
-.btn-style-3 a.btn {
+.btn-style-3 a.btn,
+.btn-style-3 button {
   font-size: 16px;
   font-weight: 500;
   color: #ffffff;
@@ -4790,6 +4791,7 @@ textarea {
 .product-wrap {
   overflow: hidden;
   position: relative;
+  /* z-index: -1; */
 }
 
 .product-wrap .product-img {
@@ -5869,14 +5871,18 @@ textarea {
 
 .blog-wrap .blog-img-date-wrap .blog-img {
   overflow: hidden;
+  aspect-ratio: 2/1;
 }
 
 .blog-wrap .blog-img-date-wrap .blog-img a {
   display: block;
+  height: 100%;
 }
 
 .blog-wrap .blog-img-date-wrap .blog-img a img {
   width: 100%;
+  height: 100%;
+  object-fit: cover;
   -webkit-transition: all .4s ease 0s;
   -o-transition: all .4s ease 0s;
   transition: all .4s ease 0s;
@@ -6007,6 +6013,10 @@ textarea {
   color: #4a4a4a;
   line-height: 28px;
   margin: 0 0 25px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
 }
 
 @media only screen and (min-width: 992px) and (max-width: 1199px) {

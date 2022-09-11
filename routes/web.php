@@ -21,7 +21,8 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ProfileController;
-
+use App\Http\Controllers\Admin\ContactController as AdminContactController;
+use App\Http\Controllers\PostController as ClientPostController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -55,13 +56,21 @@ Route::get('/shop', [ShopController::class, 'index'])->name('shop');
 
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.send');
+
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('order');
 
-Route::get('/{slug?}-{id}', [ProductController::class, 'index'])->where(['id' => '\d+', 'slug' => '.*'])->name('product');
+Route::get('/track', [CheckoutController::class, 'track'])->name('track');
 
-Route::post('/{slug?}-{id}/review', [ProductController::class, 'review'])->where(['id' => '\d+', 'slug' => '.*'])->name('product.review');
+Route::get('/p/{slug}-{id}', [ProductController::class, 'index'])->where(['id' => '\d+', 'slug' => '.*'])->name('product');
+
+Route::post('/p/{slug}-{id}/review', [ProductController::class, 'review'])->where(['id' => '\d+', 'slug' => '.*'])->name('product.review');
+
+Route::get('/posts', [ClientPostController::class, 'index'])->name('post.list');
+
+Route::get('/post/{slug}-{id}', [ClientPostController::class, 'show'])->where(['id' => '\d+', 'slug' => '.*'])->name('post.detail');
 
 // Define Cart
 
@@ -69,6 +78,7 @@ Route::post('/cart/{product}', [CartController::class, 'store'])->name('cart.add
 Route::put('/cart/{id}', [CartController::class, 'update'])->name('cart.update');
 Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.delete');
 Route::delete('/cart', [CartController::class, 'clearCart'])->name('cart.clear');
+
 // Define Admin Auth
 
 Route::middleware('guest')->prefix('/admin')->name('admin.auth.')->group(function(){
@@ -171,5 +181,8 @@ Route::middleware(['auth', 'role:super-admin'])->prefix('/admin')->name('admin.'
         Route::get('/', [RoleController::class, 'index'])->name('index');
         Route::post('/', [RoleController::class, 'store'])->name('processCreate');
     });
+
+    // Admin Contact
+    Route::get('/contacts', [AdminContactController::class, 'index'])->name('contact.list');
 
 });

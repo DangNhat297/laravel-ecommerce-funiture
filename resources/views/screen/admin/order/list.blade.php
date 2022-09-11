@@ -37,7 +37,7 @@
                         <tbody id="table-categories" class="datatable-body">
                             @foreach($orders as $order)
                             <tr class="datatable-row" style="left: 0px;" data-order-id="{{ $order->id }}">
-                                <td class="datatable-cell" style="width: 10%"><span class="text-dark-75 font-weight-bolder d-block font-size-lg mb-2">#{{ base64_encode('donhang_' . $order->id) }}</span></td>
+                                <td class="datatable-cell" style="width: 10%"><span class="text-dark-75 font-weight-bolder d-block font-size-lg mb-2">#{{ $order->id }}</span></td>
                                 <td class="datatable-cell" style="flex-grow:1">
                                 <span class="text-dark-75 font-weight-bolder d-block font-size-lg mb-2">{{ $order->fullname }}</span>
                                 <span class="text-dark-75 font-weight-bolder d-block font-size-lg mb-2">{{ $order->phone }}</span>
@@ -58,13 +58,13 @@
                                     <a href="{{ route('admin.order.detail', $order->id) }}" class="btn btn-icon btn-success btn-sm detail-order">
                                         <i class="fas fa-ellipsis-h"></i>
                                     </a>
-                                    <form action="{{ route('admin.order.delete', $order->id) }}" method="POST" class="d-inline">
+                                    {{-- <form action="{{ route('admin.order.delete', $order->id) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-icon btn-danger btn-sm delete-item">
                                             <i class="far fa-trash-alt"></i>
                                         </button>
-                                    </form>
+                                    </form> --}}
                                 </td>
                             </tr>
                             @endforeach

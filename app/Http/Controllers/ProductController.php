@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ProductViewedEvent;
 use App\Http\Requests\ReviewRequest;
 use App\Models\Product;
 use App\Models\Review;
@@ -16,6 +17,8 @@ class ProductController extends Controller
         $product = Product::with(['reviews', 'images', 'attributes', 'categories'])->where('id', $id)->first();
 
         if(!$product || $product->published == 0) abort(404);
+
+        event(new ProductViewedEvent($product));
 
         $relatedProducts = Product::whereHas('categories', function($q) use ($product){
             $q->whereIn('id', $product->categories->pluck('id')->toArray());

@@ -21,7 +21,7 @@
                                 <div class="col-lg-6 col-md-6">
                                     <div class="billing-info mb-20">
                                         <label>Họ và tên <abbr class="required" title="required">*</abbr></label>
-                                        <input type="text" name="fullname" value="{{ old('fullname') }}" placeholder="Nhập họ và tên*">
+                                        <input type="text" name="fullname" value="{{ auth()->user()->fullname ?? old('fullname') }}" placeholder="Nhập họ và tên*">
                                         @error('fullname')
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
@@ -39,7 +39,7 @@
                                 <div class="col-lg-12">
                                     <div class="billing-info mb-20">
                                         <label>Email <abbr class="required" title="required">*</abbr></label>
-                                        <input type="email" name="email" value="{{ old('email') }}" placeholder="Nhập email*">
+                                        <input type="email" name="email" value="{{ auth()->user()->email ?? old('email') }}" placeholder="Nhập email*">
                                         @error('email')
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror

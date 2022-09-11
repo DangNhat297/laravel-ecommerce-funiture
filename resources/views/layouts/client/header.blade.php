@@ -14,6 +14,8 @@
                                 <li><a href="{{ route('home') }}">TRANG CHỦ</a></li>
                                 <li><a href="{{ route('shop') }}">CỬA HÀNG</a></li>
                                 <li><a href="{{ route('contact') }}">LIÊN HỆ</a></li>
+                                <li><a href="{{ route('post.list') }}">BLOG</a></li>
+                                <li><a href="{{ route('track') }}">ĐƠN HÀNG</a></li>
                                 @role('super-admin')
                                 <li><a href="{{ route('admin.dashboard') }}">QUẢN TRỊ</a></li>
                                 @endrole
@@ -29,8 +31,8 @@
                                 <i class="pe-7s-close s-close"></i>
                             </a>
                             <div class="search-wrap-1">
-                                <form action="#">
-                                    <input placeholder="Search products…" type="text">
+                                <form action="{{ route('shop') }}">
+                                    <input placeholder="Tìm kiếm sản phẩm" name="q" type="text">
                                     <button class="button-search"><i class="pe-7s-search"></i></button>
                                 </form>
                             </div>

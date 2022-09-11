@@ -31,7 +31,19 @@ class PostCategory extends Model
         parent::boot();
 
         static::deleting(function($cat) {
-             $cat->childs()->delete();
+            //  $cat->childs()->delete();
+            foreach($cat->childs as $child){
+                $child->parent_id = 0;
+                $child->save();
+            }
+
+             // check product has one or many category
+            foreach($cat->posts as $post){
+                if($post->categories->count() == 1){
+                    $newCat = PostCategory::where('id', '!=', $cat->id)->pluck('id')->shuffle()->first();
+                    $post->categories()->sync($newCat);
+                }
+            }
         });
     }
 }

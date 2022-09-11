@@ -43,13 +43,13 @@
                                         <span class="text-muted ml-2">{{ $review->created_at->format("d-m-Y \l\ú\c H:i") }}</span>
                                         <span class="label label-primary font-weight-bolder label-inline ml-2">{{ $review->email }}</span>
                                 </div>
-                                    <form action="{{ route('admin.review.delete', $review->id) }}" method="POST">
+                                    {{-- <form action="{{ route('admin.review.delete', $review->id) }}" method="POST">
                                         @csrf 
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-hover-light-primary btn-sm btn-icon delete-item">
                                                 <i class="flaticon2-trash"></i>
                                         </button>
-                                    </form>
+                                    </form> --}}
                                 </div>
                                 <p class="p-0 font-weight-bold font-size-h6">{{ $review->message }}</p>
                             </div>

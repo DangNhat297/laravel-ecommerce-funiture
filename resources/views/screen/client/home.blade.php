@@ -39,24 +39,24 @@
         <div class="row">
             <div class="col-lg-6 col-md-6 col-12">
                 <div class="banner-wrap mb-30" data-aos="fade-up" data-aos-delay="200">
-                    <a href="product-details.html"><img src="/assets/client/images/banner/banner-6.webp" alt=""></a>
+                    <a href="{{ route('shop', ['categories' => 'phong-bep']) }}"><img src="/assets/client/images/banner/banner-6.webp" alt=""></a>
                     <div class="banner-content-5">
                         {{-- <span>Up To 40% Off</span> --}}
                         <h2>Nội Thất Phòng Bếp</h2>
                         <div class="btn-style-3 btn-hover">
-                            <a class="btn hover-border-radius" href="product-details.html">Xem Ngay</a>
+                            <a class="btn hover-border-radius" href="{{ route('shop', ['categories' => 'phong-bep']) }}">Xem Ngay</a>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-lg-6 col-md-6 col-12">
                 <div class="banner-wrap mb-30" data-aos="fade-up" data-aos-delay="400">
-                    <a href="product-details.html"><img src="/assets/client/images/banner/banner-7.webp" alt=""></a>
+                    <a href="{{ route('shop', ['categories' => 'phong-ngu']) }}"><img src="/assets/client/images/banner/banner-7.webp" alt=""></a>
                     <div class="banner-content-5">
                         {{-- <span>Up To 40% Off</span> --}}
                         <h2>Nội Thất Phòng Ngủ</h2>
                         <div class="btn-style-3 btn-hover">
-                            <a class="btn hover-border-radius" href="product-details.html">Xem Ngay</a>
+                            <a class="btn hover-border-radius" href="{{ route('shop', ['categories' => 'phong-ngu']) }}">Xem Ngay</a>
                         </div>
                     </div>
                 </div>
@@ -392,84 +392,30 @@
 <div class="blog-area pb-70">
     <div class="container">
         <div class="section-title-2 st-border-center text-center mb-75" data-aos="fade-up" data-aos-delay="200">
-            <h2>Latest News</h2>
+            <h2>Bài Viết Mới</h2>
         </div>
         <div class="row">
+            @foreach ($posts as $post)
             <div class="col-lg-4 col-md-6">
-                <div class="blog-wrap mb-30" data-aos="fade-up" data-aos-delay="200">
+                <div class="blog-wrap mb-50" data-aos="fade-up" data-aos-delay="200">
                     <div class="blog-img-date-wrap mb-25">
                         <div class="blog-img">
-                            <a href="blog-details.html"><img src="/assets/client/images/blog/blog-1.png" alt=""></a>
+                            <a href="{{ route('post.detail', ['slug' => $post->slug, 'id' => $post->id]) }}"><img src="{{ getPathImage($post->thumbnail) }}" alt=""></a>
                         </div>
                         <div class="blog-date">
-                            <h5>05 <span>May</span></h5>
+                            <h5>{{ $post->created_at->format("d M") }}</h5>
                         </div>
                     </div>
                     <div class="blog-content">
-                        <div class="blog-meta">
-                            <ul>
-                                <li><a href="#">Furniture</a>,</li>
-                                <li>By:<a href="#"> Admin</a></li>
-                            </ul>
-                        </div>
-                        <h3><a href="blog-details.html">Lorem ipsum dolor consectet.</a></h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipi elit, sed do eiusmod tempor incididunt ut labo et dolore magna aliqua.</p>
+                        <h3><a href="{{ route('post.detail', ['slug' => $post->slug, 'id' => $post->id]) }}">{{ $post->title }}</a></h3>
+                        <p>{{ $post->short_desc }}</p>
                         <div class="blog-btn-2 btn-hover">
-                            <a class="btn hover-border-radius theme-color" href="blog-details.html">Read More</a>
+                            <a class="btn hover-border-radius theme-color" href="{{ route('post.detail', ['slug' => $post->slug, 'id' => $post->id]) }}">Xem thêm</a>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="blog-wrap mb-30" data-aos="fade-up" data-aos-delay="400">
-                    <div class="blog-img-date-wrap mb-25">
-                        <div class="blog-img">
-                            <a href="blog-details.html"><img src="/assets/client/images/blog/blog-2.png" alt=""></a>
-                        </div>
-                        <div class="blog-date">
-                            <h5>06 <span>May</span></h5>
-                        </div>
-                    </div>
-                    <div class="blog-content">
-                        <div class="blog-meta">
-                            <ul>
-                                <li><a href="#">Furniture</a>,</li>
-                                <li>By:<a href="#"> Admin</a></li>
-                            </ul>
-                        </div>
-                        <h3><a href="blog-details.html">Duis et volutpat pellentesque.</a></h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipi elit, sed do eiusmod tempor incididunt ut labo et dolore magna aliqua.</p>
-                        <div class="blog-btn-2 btn-hover">
-                            <a class="btn hover-border-radius theme-color" href="blog-details.html">Read More</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="blog-wrap mb-30" data-aos="fade-up" data-aos-delay="600">
-                    <div class="blog-img-date-wrap mb-25">
-                        <div class="blog-img">
-                            <a href="blog-details.html"><img src="/assets/client/images/blog/blog-3.png" alt=""></a>
-                        </div>
-                        <div class="blog-date">
-                            <h5>07 <span>May</span></h5>
-                        </div>
-                    </div>
-                    <div class="blog-content">
-                        <div class="blog-meta">
-                            <ul>
-                                <li><a href="#">Furniture</a>,</li>
-                                <li>By:<a href="#"> Admin</a></li>
-                            </ul>
-                        </div>
-                        <h3><a href="blog-details.html">Vivamus vitae dolor convallis.</a></h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipi elit, sed do eiusmod tempor incididunt ut labo et dolore magna aliqua.</p>
-                        <div class="blog-btn-2 btn-hover">
-                            <a class="btn hover-border-radius theme-color" href="blog-details.html">Read More</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
 </div>

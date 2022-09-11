@@ -1,7 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Events\OrderConfirmEvent;
 use App\Http\Requests\CheckoutRequest;
+use App\Http\Services\CartService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,82 +19,15 @@ class CheckoutController extends Controller
 {
     
     public function index(){
-        if(Auth::check()){
-            $carts = Cart::with('product:products.id,products.name,products.slug,products.price,products.promotion')
-                    ->where('user_id', Auth::user()->id)
-                    ->get()
-                    ->map(function(Cart $cart) use (&$total){
-                        $cart->thumb = $cart->product->thumbnail->path;
-                        $cart->product->makeHidden('thumbnail');
-                        $cart->price = $cart->product->promotion > 0 ? $cart->product->promotion : $cart->product->price;
-                        $cart->subtotal = $cart->product->promotion > 0 ? $cart->product->promotion*$cart->quantity : $cart->product->price*$cart->quantity;
-                        $total += $cart->product->promotion > 0 ? $cart->product->promotion*$cart->quantity : $cart->product->price*$cart->quantity;
-                        return $cart; 
-                    })
-                    ->toArray();
-        } else {
-            // return response()->json(['ok']);
-            $carts = Cookie::get('carts') ?? "[]";
-            $carts = json_decode($carts, true);
-            $carts = array_map(function($key, $item) use (&$total, &$carts){
-                $product = Product::select('id', 'name', 'slug', 'price', 'promotion')->where('id', $item['product_id'])->first();
-                if(!$product){
-                    unset($carts[$key]);
-                    return null;
-                }
-                $item['id'] = $key;
-                $item['product'] = $product->toArray();
-                $item['thumb'] = $product->thumbnail->path;
-                $item['price'] = $product->promotion > 0 ? $product->promotion : $product->price;
-                $item['subtotal'] = ($product->promotion > 0) ? $product->promotion*$item['quantity'] : $product->price*$item['quantity'];
-                $total += ($product->promotion > 0) ? $product->promotion*$item['quantity'] : $product->price*$item['quantity'];
-                return $item;
-            }, array_keys($carts), $carts);
-            // dd($carts);
-            $carts = (array)array_filter($carts);
-        }
-        if(count($carts) == 0){
+        $carts = CartService::getCart();
+        if(count($carts['list']) == 0){
             return view('screen.client.cart-empty');
         }
         return view('screen.client.checkout');
     }
 
     public function store(CheckoutRequest $request){
-        $total = 0;
-        if(Auth::check()){
-            $carts = Cart::with('product:products.id,products.name,products.slug,products.price,products.promotion')
-                    ->where('user_id', Auth::user()->id)
-                    ->get()
-                    ->map(function(Cart $cart) use (&$total){
-                        $cart->thumb = $cart->product->thumbnail->path;
-                        $cart->product->makeHidden('thumbnail');
-                        $cart->price = $cart->product->promotion > 0 ? $cart->product->promotion : $cart->product->price;
-                        $cart->subtotal = $cart->product->promotion > 0 ? $cart->product->promotion*$cart->quantity : $cart->product->price*$cart->quantity;
-                        $total += $cart->product->promotion > 0 ? $cart->product->promotion*$cart->quantity : $cart->product->price*$cart->quantity;
-                        return $cart; 
-                    })
-                    ->toArray();
-        } else {
-            // return response()->json(['ok']);
-            $carts = Cookie::get('carts') ?? "[]";
-            $carts = json_decode($carts, true);
-            $carts = array_map(function($key, $item) use (&$total, &$carts){
-                $product = Product::select('id', 'name', 'slug', 'price', 'promotion')->where('id', $item['product_id'])->first();
-                if(!$product){
-                    unset($carts[$key]);
-                    return null;
-                }
-                $item['id'] = $key;
-                $item['product'] = $product->toArray();
-                $item['thumb'] = $product->thumbnail->path;
-                $item['price'] = $product->promotion > 0 ? $product->promotion : $product->price;
-                $item['subtotal'] = ($product->promotion > 0) ? $product->promotion*$item['quantity'] : $product->price*$item['quantity'];
-                $total += ($product->promotion > 0) ? $product->promotion*$item['quantity'] : $product->price*$item['quantity'];
-                return $item;
-            }, array_keys($carts), $carts);
-            // dd($carts);
-            $carts = (array)array_filter($carts);
-        }
+        $carts = CartService::getCart();
         $address = array_reverse($request->address);
         $address = implode(" - ", array_filter($address));
         
@@ -107,7 +43,7 @@ class CheckoutController extends Controller
                 'status'    => 1,
                 'user_id'   => Auth::user()->id ?? null
             ]);
-            foreach($carts as $product){
+            foreach($carts['list'] as $product){
                 $order->products()->attach($product['product_id'], [
                     'options'   => $product['options'],
                     'quantity'  => $product['quantity'],
@@ -117,6 +53,7 @@ class CheckoutController extends Controller
                 $p->quantity = $p->quantity - $product['quantity'];
                 $p->save();
             }
+            event(new OrderConfirmEvent($order));
             if(Auth::check()){
                 Cart::where('user_id', Auth::user()->id)->delete();
             } else {
@@ -129,7 +66,7 @@ class CheckoutController extends Controller
                         ->with('email', $request->email)
                         ->with('phone', $request->phone)
                         ->with('fullname', $request->fullname)
-                        ->with('order_id', base64_encode('donhang_' . $order->id));
+                        ->with('order_id', '#' . $order->id);
         }catch(\Exception $e){
             Log::error($e->getLine() . "\nLine: " . $e->getMessage());
             DB::rollBack();
@@ -137,6 +74,23 @@ class CheckoutController extends Controller
                         ->back()
                         ->with('error', 'Có lỗi xảy ra, vui lòng thử lại');
         }
+    }
+
+    public function track(Request $request)
+    {
+        if($request->query('id')){
+            $id = $request->query('id');
+            $id = str_replace('#', '', $id);
+            $order = Order::findOrFail($id);
+            $order->load(['orderDetails' => function($q){
+                $q->with(['product' => function($q){
+                    $q->with('thumbnail');
+                }]);
+            }]);
+            // dd($order);
+            return view('screen.client.track-order', compact('order'));
+        }
+        return view('screen.client.track-order');
     }
 
 }

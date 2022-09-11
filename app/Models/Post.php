@@ -27,4 +27,12 @@ class Post extends Model
     public function author(){
         return $this->hasOne(User::class, 'id', 'user_id');
     }
+
+    public function getPreviousAttribute(){
+        return $this->where('id', '<', $this->id)->orderBy('id','desc')->first();
+    }
+
+    public function getNextAttribute(){
+        return $this->where('id', '>', $this->id)->orderBy('id','asc')->first();
+    }
 }

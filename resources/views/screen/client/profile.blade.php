@@ -55,12 +55,12 @@
                                                 <tbody>
                                                     @foreach($orders as $order)
                                                     <tr>
-                                                        <td>{{ base64_encode('donhang_' . $order->id) }}</td>
+                                                        <td>#{{ $order->id }}</td>
                                                         <td>{{ $order->created_at->format("d-m-Y \l\ú\c H:i") }}</td>
                                                         <td>{{ config("common.order_status.{$order->status}") }}</td>
                                                         <td>{{ productPrice($order->orderDetails->sum(fn($q) => $q->quantity*$q->price)) }}</td>
                                                         @if ($order->status == 1)
-                                                            <td><a href="{{ route('profile.cancel-order', $order->id) }}" class="check-btn sqr-btn ">Hủy đơn</a></td>
+                                                            <td><a href="{{ route('profile.cancel-order', $order->id) }}" class="check-btn sqr-btn cancel-order">Hủy đơn</a></td>
                                                         @endif
                                                     </tr>
                                                     @endforeach
@@ -134,4 +134,28 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('custom-js-tag')
+<script>
+    $(document).ready(function(){
+        $('.cancel-order').click(function(e){
+            e.preventDefault()
+            let _this = $(this)
+            Swal.fire({
+                title: 'Bạn có chắc muốn hủy đơn hàng này?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Hủy ngay',
+                cancelButtonText: 'Không'
+            }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = $(_this).attr('href')
+            }
+            })
+        })
+    })
+</script>
 @endsection

@@ -95,3 +95,11 @@ if(!function_exists('roundNumber')){
         return round($float, 1, PHP_ROUND_HALF_UP);
     }
 }
+
+if(!function_exists('hiddenPhone')){
+    function hiddenPhone($phone){
+        $first = substr($phone, 0, 3);
+        $last = substr($phone, strlen($phone)-4, strlen($phone)-1);
+        return $first . 'xxx' . $last;
+    }
+}

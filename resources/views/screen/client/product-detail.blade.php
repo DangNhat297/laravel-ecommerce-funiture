@@ -81,7 +81,7 @@
                         </div>
                         <div class="single-product-cart btn-hover">
                             <input type="hidden" value="{{ $product->id }}" id="idProduct">
-                            <button id="addToCart">Add to cart</button>
+                            <button id="addToCart">Thêm vào giỏ</button>
                         </div>
                         <div class="single-product-wishlist">
                             <a title="Wishlist" href="wishlist.html"><i class="pe-7s-like"></i></a>

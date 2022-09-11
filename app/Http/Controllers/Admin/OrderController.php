@@ -41,24 +41,24 @@ class OrderController extends Controller
         }
     }
 
-    public function destroy(Order $order)
-    {
-        try{
-            $result = $order->delete();
-            if($result){
-                return redirect()
-                        ->back()
-                        ->with('success', 'Xóa đơn hàng thành công');
-            }
-            return redirect()
-                    ->back()
-                    ->with('error', 'Có lỗi xảy ra, vui lòng thử lại');
-        }catch(\Exception $e){
-            Log::error($e->getMessage());
-            return redirect()
-                    ->back()
-                    ->with('error', 'Có lỗi xảy ra, vui lòng thử lại');
-        }
-    }
+    // public function destroy(Order $order)
+    // {
+    //     try{
+    //         $result = $order->delete();
+    //         if($result){
+    //             return redirect()
+    //                     ->back()
+    //                     ->with('success', 'Xóa đơn hàng thành công');
+    //         }
+    //         return redirect()
+    //                 ->back()
+    //                 ->with('error', 'Có lỗi xảy ra, vui lòng thử lại');
+    //     }catch(\Exception $e){
+    //         Log::error($e->getMessage());
+    //         return redirect()
+    //                 ->back()
+    //                 ->with('error', 'Có lỗi xảy ra, vui lòng thử lại');
+    //     }
+    // }
 
 }

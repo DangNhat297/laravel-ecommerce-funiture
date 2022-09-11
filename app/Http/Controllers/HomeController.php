@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
 use App\Models\Slider;
 use Illuminate\Http\Request;
 use App\Models\Product;
@@ -26,7 +27,11 @@ class HomeController extends Controller
                             ->orderBy('view', 'DESC')
                             ->limit(8)
                             ->get();
-        return view('screen.client.home', compact('sliders', 'newProducts', 'productSales', 'mostView'));
+        $posts = Post::where('published', 1)
+                        ->orderBy('id', 'DESC')
+                        ->limit(3)
+                        ->get();
+        return view('screen.client.home', compact('sliders', 'newProducts', 'productSales', 'mostView', 'posts'));
     }
 
 }
